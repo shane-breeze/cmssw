@@ -265,6 +265,7 @@ def batchScriptIC(jobDir):
 
    cmssw_release = os.environ['CMSSW_BASE']
    script = """#!/bin/bash
+ulimit -c 0
 export X509_USER_PROXY=/home/hep/$USER/myproxy
 source /vols/cms/grid/setup.sh
 cd {jobdir}
@@ -275,8 +276,37 @@ echo 'running'
 python {cmssw}/src/PhysicsTools/HeppyCore/python/framework/looper.py pycfg.py config.pck --options=options.json
 echo
 echo 'sending the job directory back'
-mv Loop/* ./ && rm -r Loop
+cp -r Loop/* ./ && rm -r Loop
 """.format(jobdir = jobDir,cmssw = cmssw_release)
+   return script
+
+def batchScriptBristol(jobDir):
+   script = """#!/bin/bash  
+if [ -f cmgdataset.tar.gz ]; then
+  tar xzf cmgdataset.tar.gz
+fi
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH={scram_arch}
+scramv1 project -n cmssw CMSSW {cmssw_version}
+cd cmssw
+tar xzf ../cmssw.tar.gz
+cd src
+eval `scramv1 runtime -sh`
+# scram b
+cd $_CONDOR_JOB_IWD
+mkdir -p chunk
+cd chunk
+tar xzf ../chunk.tar.gz
+export HOSTNAME
+export HOME=$_CONDOR_JOB_IWD
+export USER=""
+python $CMSSW_BASE/src/PhysicsTools/HeppyCore/python/framework/looper.py pycfg.py config.pck
+cd Loop
+tar -czf out.tar.gz *
+mv out.tar.gz $_CONDOR_JOB_IWD
+""".format(scram_arch = os.environ['SCRAM_ARCH'],
+           cmssw_version = os.environ['CMSSW_VERSION']
+           )
    return script
 
 def batchScriptLocal(  remoteDir, index ):
@@ -317,6 +347,8 @@ class MyBatchManager( BatchManager ):
            scriptFile.write( batchScriptPADOVA( value, jobDir) )        
        elif mode == 'IC':
            scriptFile.write( batchScriptIC(jobDir) )
+       elif mode == 'Bristol':
+          scriptFile.write( batchScriptBristol(jobDir) )
        scriptFile.close()
        os.system('chmod +x %s' % scriptFileName)
        

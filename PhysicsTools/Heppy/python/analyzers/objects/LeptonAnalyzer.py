@@ -187,6 +187,8 @@ class LeptonAnalyzer( Analyzer ):
                     ele.lostInner()<=self.cfg_ana.inclusive_electron_lostHits ):
                 inclusiveElectrons.append(ele)
         event.inclusiveLeptons = inclusiveMuons + inclusiveElectrons
+        event.inclusiveMuons = inclusiveMuons 
+        event.inclusiveElectrons = inclusiveElectrons
  
         if self.doMiniIsolation:
             if self.miniIsolationVetoLeptons == "inclusive":
@@ -240,6 +242,8 @@ class LeptonAnalyzer( Analyzer ):
         event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
         event.selectedElectrons.sort(key = lambda l : l.pt(), reverse = True)
         event.inclusiveLeptons.sort(key = lambda l : l.pt(), reverse = True)
+        event.inclusiveElectrons.sort(key = lambda l : l.pt(), reverse = True)
+        event.inclusiveMuons.sort(key = lambda l : l.pt(), reverse = True)
 
         for lepton in event.selectedLeptons:
             if hasattr(self,'efficiency'):

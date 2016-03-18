@@ -29,7 +29,7 @@ class RLTInfo( object ):
         return '\n'.join(lines)
 
     def write(self, dirName, fileName='RLTInfo.root'):
-        f = TFile('/'.join( [dirName, fileName]), 'RECREATE')
+        f = TFile('/'.join( [dirName, fileName]), 'RECREATE', "", 9)
         t = Tree('RLTInfo','HLT/Run/Lumi information')
         t.var('run', int )
         t.var('lumi', int )

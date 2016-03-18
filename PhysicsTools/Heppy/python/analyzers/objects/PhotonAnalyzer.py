@@ -61,7 +61,12 @@ class PhotonAnalyzer( Analyzer ):
         count = self.counters.counter('events')
         count.register('all events')
         count.register('has >=1 gamma at preselection')
-        count.register('has >=1 selected gamma')
+        count.register('has >=1 selected gamma')    
+        if self.cfg_ana.checkGen and self.cfg_comp.isMC:
+            self.counters.addCounter('genInfo')
+            self.counters.counter('genInfo').register('all events')
+            self.counters.counter('genInfo').register('has >=1 prompt gamma')
+            self.counters.counter('genInfo').register('has >=1 prompt direct gamma')
 
     def makePhotons(self, event):
         event.allphotons = map( Photon, self.handles['photons'].product() )
@@ -161,7 +166,48 @@ class PhotonAnalyzer( Analyzer ):
         self.counters.counter('events').inc('all events')
         if foundPhoton: self.counters.counter('events').inc('has >=1 gamma at preselection')
         if len(event.selectedPhotons): self.counters.counter('events').inc('has >=1 selected gamma')
-       
+
+    def checkGenPhoton(self, event):
+        def isHardParton(particle):
+            return abs(particle.pdgId()) in [1,2,3,4,5,6,21] and particle.status() == 23
+
+        def isPromptPhoton(photon):
+            return photon.status() == 1 and abs(photon.mother(0).pdgId()) <= 22 and abs(photon.mother(0).pdgId()) not in [11,13,15]
+
+        def isDirectPhoton(photon,partons):
+            for parton in partons:
+                # print deltaR(photon.eta(),photon.phi(),parton.eta(),parton.phi())
+                if deltaR(photon.eta(),photon.phi(),parton.eta(),parton.phi()) < 0.4:
+                    return False
+            return True
+
+        def getMinDeltaR(photon,partons):
+            dRs = []
+            for parton in partons: 
+                dr = deltaR(photon.eta(),photon.phi(),parton.eta(),parton.phi())
+                dRs.append(dr)
+            if len(dRs)>0: return sorted(dRs)[0]
+            else: return None
+
+        self.counters.counter('genInfo').inc('all events')
+        event.genPhotons = [ x for x in event.genParticles if x.status() == 1 and abs(x.pdgId()) == 22 ]
+
+        partons = [ x for x in event.genParticles if isHardParton(x) ]
+        promptGenPhotons = [  x for x in event.genPhotons if isPromptPhoton(x) ]
+        promptDirectGenPhotons = [ x for x in promptGenPhotons if isDirectPhoton(x,partons) ]
+        event.nPromptGenPhotons = len(promptGenPhotons)
+        event.nPromptDirectGenPhotons = len(promptDirectGenPhotons)
+        if event.nPromptGenPhotons:
+            self.counters.counter('genInfo').inc('has >=1 prompt gamma')
+        if event.nPromptDirectGenPhotons:
+            self.counters.counter('genInfo').inc('has >=1 prompt direct gamma')
+
+        # Add further gen level info
+        for gamma in event.genPhotons:
+            gamma.isPrompt = isPromptPhoton(gamma)
+            gamma.isPromptDirect = isDirectPhoton(gamma,partons)
+            gamma.drMinParton = getMinDeltaR(gamma,partons)
+
     def matchPhotons(self, event):
         event.genPhotons = [ x for x in event.genParticles if x.status() == 1 and abs(x.pdgId()) == 22 ]
         event.genPhotonsWithMom = [ x for x in event.genPhotons if x.numberOfMothers()>0 ]
@@ -174,6 +220,7 @@ class PhotonAnalyzer( Analyzer ):
         for gamma in event.allphotons:
           gen = match[gamma]
           gamma.mcGamma = gen
+          gamma.isPrompt = False
           if gen and gen.pt()>=0.5*gamma.pt() and gen.pt()<=2.*gamma.pt():
             gamma.mcMatchId = 22
             sumPt03 = 0.;
@@ -201,6 +248,7 @@ class PhotonAnalyzer( Analyzer ):
               if deltar < deltaRmin:
                 deltaRmin = deltar
             gamma.drMinParton = deltaRmin
+            gamma.isPrompt = gen.isPromptFinalState()
           else:
             genNoMom = matchNoMom[gamma]
             if genNoMom:
@@ -340,6 +388,10 @@ class PhotonAnalyzer( Analyzer ):
 
     def process(self, event):
         self.readCollections( event.input )
+    
+        if self.cfg_ana.checkGen and self.cfg_comp.isMC:
+            self.checkGenPhoton(event)
+
         self.makePhotons(event)
 #        self.printInfo(event)   
 
@@ -351,7 +403,6 @@ class PhotonAnalyzer( Analyzer ):
 
         if self.cfg_ana.do_mc_match and hasattr(event, 'genParticles'):
             self.matchPhotons(event)
-
 
         return True
 
@@ -366,6 +417,7 @@ setattr(PhotonAnalyzer,"defaultConfig",cfg.Analyzer(
     gammaID = "PhotonCutBasedIDLoose_CSA14",
     rhoPhoton = 'fixedGridRhoFastjetAll',
     gamma_isoCorr = 'rhoArea',
+    effectiveAreas = 'PHYS14_25ns_v1',
     # Footprint-removed isolation, removing all the footprint of the photon
     doFootprintRemovedIsolation = False, # off by default since it requires access to all PFCandidates
     packedCandidates = 'packedPFCandidates',
@@ -373,6 +425,7 @@ setattr(PhotonAnalyzer,"defaultConfig",cfg.Analyzer(
     conversionSafe_eleVeto = False,
     do_mc_match = True,
     do_randomCone = False,
+    checkGen = True,
   )
 )
 

@@ -102,12 +102,18 @@ class Jet(PhysicsObject):
         eta = abs(self.eta());
         energy = self.rawEnergy();
         chf = self.chargedHadronEnergy()/energy;
-        nhf = self.neutralHadronEnergy()/energy;
-        phf = self.neutralEmEnergy()/energy;
+	# chf = self.chargedHadronEnergyFraction();
+	nhf = self.neutralHadronEnergy()/energy;
+	# nhf = self.neutralHadronEnergyFraction();
+	phf = self.neutralEmEnergy()/energy;
+	# phf = self.neutralEmEnergyFraction();
         muf = self.muonEnergy()/energy;
+	# muf = self.muonEnergyFraction();
         elf = self.chargedEmEnergy()/energy;
+	# elf = self.chargedEmEnergyFraction();
         chm = self.chargedHadronMultiplicity();
         npr = self.chargedMultiplicity() + self.neutralMultiplicity();
+
         npn = self.neutralMultiplicity();
         #if npr != self.nConstituents():
         #    import pdb; pdb.set_trace()
@@ -119,6 +125,11 @@ class Jet(PhysicsObject):
             #elif self.jetID("POG_PFID_Medium") : return 2;  commented this line because this working point doesn't exist anymore (as 12/05/15)
             elif self.jetID("POG_PFID_Loose")  : return 1;
             else                               : return 0;
+	elif name ==  "POG_PFID_13TeV":
+	    if   self.jetID("POG_PFID_Tight")  : return 3;
+            elif self.jetID("POG_PFID_Loose")  : return 1;
+            else                               : return 0;
+     
         
         # jetID from here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetID#Recommendations_for_13_TeV_data
         if name == "POG_PFID_Loose":    return ((eta<3.0 and ((npr>1 and phf<0.99 and nhf<0.99) and (eta>2.4 or (elf<0.99 and chf>0 and chm>0)))) or (eta>3.0 and (phf<0.90 and npn>10)));

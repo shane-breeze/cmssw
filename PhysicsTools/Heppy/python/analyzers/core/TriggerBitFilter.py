@@ -33,7 +33,10 @@ class TriggerBitFilter( Analyzer ):
         self.count.register('pass veto')
 
     def process(self, event):
-        if self.autoAccept: return True
+        self.counters.counter('events').inc('all')
+        if self.autoAccept:
+            self.counters.counter('events').inc('passed')
+            return True
         self.readCollections( event.input )
         self.count.inc('all events')
         if not self.mainFilter.check(event.input.object(), self.handles['TriggerResults'].product()):

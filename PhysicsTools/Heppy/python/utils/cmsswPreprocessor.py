@@ -66,7 +66,7 @@ class CmsswPreprocessor :
 		cmsswConfig = imp.load_source("cmsRunProcess",os.path.expandvars(self.configFile))
 		inputfiles= []
 		for fn in component.files :
-			if not re.match("file:.*",fn) and not re.match("root:.*",fn) :
+			if not re.match("file:.*",fn) and not re.match("root:.*",fn) and not fn.startswith('/store/'):
 				fn="file:"+fn
 			inputfiles.append(fn)
 

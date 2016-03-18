@@ -27,13 +27,17 @@ class METAnalyzer( Analyzer ):
 
     def declareHandles(self):
         super(METAnalyzer, self).declareHandles()
-        self.handles['met'] = AutoHandle( self.cfg_ana.metCollection, 'std::vector<pat::MET>' )
-        if self.cfg_ana.doMetNoPU: 
+        if self.cfg_ana.fallbackLabel:
+            self.handles['met'] = AutoHandle( self.cfg_ana.metCollection, 'std::vector<pat::MET>', fallbackLabel=self.cfg_ana.fallbackLabel )
+            if self.cfg_ana.doMetNoPU: 
+                self.handles['nopumet'] = AutoHandle( self.cfg_ana.noPUMetCollection, 'std::vector<pat::MET>', fallbackLabel=self.cfg_ana.fallbackLabel )
+        else:
+            self.handles['met'] = AutoHandle( self.cfg_ana.metCollection, 'std::vector<pat::MET>' )
             self.handles['nopumet'] = AutoHandle( self.cfg_ana.noPUMetCollection, 'std::vector<pat::MET>' )
         if self.cfg_ana.doTkMet:
             self.handles['cmgCand'] = AutoHandle( self.cfg_ana.candidates, self.cfg_ana.candidatesTypes )
-            #self.handles['vertices'] =  AutoHandle( "offlineSlimmedPrimaryVertices", 'std::vector<reco::Vertex>', fallbackLabel="offlinePrimaryVertices" )
-            self.mchandles['packedGen'] = AutoHandle( 'packedGenParticles', 'std::vector<pat::PackedGenParticle>' )
+            self.handles['vertices'] =  AutoHandle( "offlineSlimmedPrimaryVertices", 'std::vector<reco::Vertex>', fallbackLabel="offlinePrimaryVertices" )
+            self.mchandles['packedGen']  = AutoHandle( 'packedGenParticles', 'std::vector<pat::PackedGenParticle>' )
 
     def beginLoop(self, setup):
         super(METAnalyzer,self).beginLoop(setup)
@@ -188,6 +192,7 @@ class METAnalyzer( Analyzer ):
           deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
           self.applyDeltaMet(self.met, deltaMetJEC)
         if self.applyJetSmearing:
+          self.met.unsmearedPt = self.met.pt()
           deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
           self.applyDeltaMet(self.met, deltaMetSmear)
 
@@ -293,5 +298,6 @@ setattr(METAnalyzer,"defaultConfig", cfg.Analyzer(
     candidatesTypes='std::vector<pat::PackedCandidate>',
     dzMax = 0.1,
     collectionPostFix = "",
+    fallbackLabel = None,
     )
 )

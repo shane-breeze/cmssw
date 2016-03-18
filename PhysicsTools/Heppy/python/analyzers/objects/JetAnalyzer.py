@@ -254,6 +254,7 @@ class JetAnalyzer( Analyzer ):
                     #print "overlap discarded", lep.p4().pt(), lep.p4().eta(), lep.p4().phi(), lep.jetOverlap.p4().pt(), lep.jetOverlap.p4().eta(), lep.jetOverlap.p4().phi()
                     lep.jetOverlapIdx = 1000 + self.discardedJets.index(lep.jetOverlap)
 
+
         ## First cleaning, then Jet Id
         self.noIdCleanJetsAll, cleanLeptons = cleanJetsAndLeptons(self.jetsAllNoID, leptons, self.jetLepDR, self.jetLepArbitration)
         self.noIdCleanJets = [j for j in self.noIdCleanJetsAll if abs(j.eta()) <  self.cfg_ana.jetEtaCentral ]
@@ -268,6 +269,7 @@ class JetAnalyzer( Analyzer ):
             else:
                 photons = [ g for g in event.selectedPhotons ] 
 
+<<<<<<< HEAD
         self.gamma_cleanJetaAll = []
         self.gamma_noIdCleanJetsAll = []
 
@@ -307,6 +309,12 @@ class JetAnalyzer( Analyzer ):
         for jet in self.gamma_noIdCleanJetsAll:
             if not self.testJetID( jet ):
                 self.gamma_cleanJetsFailIdAll.append(jet)
+
+        if hasattr(self.cfg_ana,'cleanAllJets'):
+            if self.cfg_ana.cleanAllJets:
+                if self.cfg_ana.alwaysCleanPhotons:
+                    self.allJetsCleaned = self.gamma_allJetsCleaned
+                self.allJetsCleanedCentral = [ j for j in self.allJetsCleaned if abs(j.eta()) < self.cfg_ana.jetEtaCentral ]
 
         self.gamma_cleanJetsFailId = [j for j in self.gamma_cleanJetsFailIdAll if abs(j.eta()) <  self.cfg_ana.jetEtaCentral ]
         
@@ -370,6 +378,8 @@ class JetAnalyzer( Analyzer ):
         setattr(event,"jetsIdOnly"             +self.cfg_ana.collectionPostFix, self.jetsIdOnly             ) 
         setattr(event,"cleanJetsAll"           +self.cfg_ana.collectionPostFix, self.cleanJetsAll           ) 
         setattr(event,"cleanJets"              +self.cfg_ana.collectionPostFix, self.cleanJets              ) 
+        setattr(event,"allJetsCleaned"         +self.cfg_ana.collectionPostFix, self.allJetsCleaned         ) 
+        setattr(event,"allJetsCleanedCentral"  +self.cfg_ana.collectionPostFix, self.allJetsCleanedCentral  )
         setattr(event,"cleanJetsFwd"           +self.cfg_ana.collectionPostFix, self.cleanJetsFwd           ) 
         setattr(event,"cleanJetsFailIdAll"           +self.cfg_ana.collectionPostFix, self.cleanJetsFailIdAll           ) 
         setattr(event,"cleanJetsFailId"              +self.cfg_ana.collectionPostFix, self.cleanJetsFailId              ) 
@@ -377,6 +387,7 @@ class JetAnalyzer( Analyzer ):
         setattr(event,"gamma_cleanJetsAll"     +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsAll     ) 
         setattr(event,"gamma_cleanJets"        +self.cfg_ana.collectionPostFix, self.gamma_cleanJets        ) 
         setattr(event,"gamma_cleanJetsFwd"     +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsFwd     ) 
+        setattr(event,"gamma_allJetsCleaned"   +self.cfg_ana.collectionPostFix, self.gamma_allJetsCleaned ) 
         setattr(event,"gamma_cleanJetsFailIdAll"     +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsFailIdAll     ) 
         setattr(event,"gamma_cleanJetsFailId"        +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsFailId        ) 
 
@@ -398,7 +409,7 @@ class JetAnalyzer( Analyzer ):
 
     def testJetID(self, jet):
         jet.puJetIdPassed = jet.puJetId() 
-        jet.pfJetIdPassed = jet.jetID('POG_PFID_Loose') 
+        jet.pfJetIdPassed = jet.jetID(self.cfg_ana.jetID) 
         if self.cfg_ana.relaxJetId:
             return True
         else:
@@ -460,10 +471,10 @@ class JetAnalyzer( Analyzer ):
         for jet in jets:
             jet.mcJet = match[jet]
 
-
- 
     def smearJets(self, event, jets):
-        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefSyst#Jet_energy_resolution
+       for jet in jets: jet.unsmearedPt = jet.pt()
+
+       # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefSyst#Jet_energy_resolution
        for jet in jets:
             gen = jet.mcJet 
             if gen != None:
@@ -506,6 +517,7 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     cleanSelectedLeptons = True, #Whether to clean 'selectedLeptons' after disambiguation. Treat with care (= 'False') if running Jetanalyzer more than once
     minLepPt = 10,
     lepSelCut = lambda lep : True,
+    jetID = "POG_PFID_Loose",
     relaxJetId = False,  
     doPuId = False, # Not commissioned in 7.0.X
     doQG = False, 

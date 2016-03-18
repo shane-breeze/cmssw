@@ -129,7 +129,6 @@ class Photon(PhysicsObject ):
         "POG_CSA14_25ns_Tight": {"conversionVeto": [True,True], "H/E":[0.019,0.016],"sigmaIEtaIEta":[0.0099,0.0263],
         "chaHadIso":[1.61,0.69],"neuHadIso":[[3.98,0.007],[4.52,0.0129]],"phoIso":[[3.01,0.0033],[3.61,0.0108]]},
 
-
         }
         
         baseWP = re.split('_',name)
@@ -182,8 +181,21 @@ class Photon(PhysicsObject ):
         if self.CutBasedIDWP(name)["chaHadIso"][idForBarrel] < self.chargedHadronIso(isocorr):
             passPhotonIso = False
 
-        if "POG_PHYS14_25ns" in name and idForBarrel == 0:
+        # Working point for PHYS14 25ns
+        if "POG_PHYS14_25ns" in name:
+            if idForBarrel == 0:
+                if self.calScaledIsoValueExp(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):
+                    passPhotonIso = False
+            elif idForBarrel == 1:
+                if self.calScaledIsoValueLin(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):
+                    passPhotonIso = False
+            if self.calScaledIsoValueLin(*self.CutBasedIDWP(name)["phoIso"][idForBarrel]) < self.photonIso(isocorr):
+                passPhotonIso = False
+        # Working point for Spring15 50ns
+        elif "POG_Spring15_50ns" in name:
             if self.calScaledIsoValueExp(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):
+                passPhotonIso = False
+            if self.calScaledIsoValueLin(*self.CutBasedIDWP(name)["phoIso"][idForBarrel]) < self.photonIso(isocorr):
                 passPhotonIso = False
         elif "POG_SPRING15_50ns" in name:
              if self.calScaledIsoValueExp(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):

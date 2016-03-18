@@ -180,6 +180,7 @@ photonType = NTupleObjectType("gamma", baseObjectTypes = [ particleType ], varia
     NTupleVariable("relIso", lambda x : x.ftprRelIso03 if hasattr(x,'ftprRelIso03') else x.relIso, float, help="relativeIsolation for photons with footprint removal and pile-up correction"),
     NTupleVariable("mcMatchId",  lambda x : getattr(x, 'mcMatchId', -99), int, mcOnly=True, help="Match to source from hard scatter (pdgId of heaviest particle in chain, 25 for H, 6 for t, 23/24 for W/Z), zero if non-prompt or fake"),
     NTupleVariable("mcPt",   lambda x : x.mcGamma.pt() if getattr(x,"mcGamma",None) else 0., mcOnly=True, help="p_{T} of associated gen photon"),
+    NTupleVariable("isPrompt", lambda x : x.isPrompt if hasattr(x,"isPrompt") else 0, int,mcOnly=True, help="flag for prompt photons"),
 ])
 
 ##------------------------------------------  
@@ -187,12 +188,14 @@ photonType = NTupleObjectType("gamma", baseObjectTypes = [ particleType ], varia
 ##------------------------------------------  
 
 jetType = NTupleObjectType("jet",  baseObjectTypes = [ fourVectorType ], variables = [
-    NTupleVariable("id",    lambda x : x.jetID("POG_PFID") , int, mcOnly=False,help="POG Loose jet ID"),
+    NTupleVariable("id",    lambda x : x.jetID("POG_PFID") , int, mcOnly=False,help="POG Loose jet ID for 8 TeV"),
+     NTupleVariable("newId",    lambda x : x.jetID("POG_PFID_13TeV") , int, mcOnly=False,help="POG Loose jet ID for 13 TeV"),  
     NTupleVariable("puId", lambda x : getattr(x, 'puJetIdPassed', -99), int,     mcOnly=False, help="puId (full MVA, loose WP, 5.3.X training on AK5PFchs: the only thing that is available now)"),
     NTupleVariable("btagCSV",   lambda x : x.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags'), help="CSV-IVF v2 discriminator"),
 #    NTupleVariable("btagCMVA",  lambda x : x.btag('pfCombinedMVABJetTags'), help="CMVA discriminator"),
     NTupleVariable("btagCMVA",  lambda x : x.btag('pfCombinedMVAV2BJetTags'), help="CMVA discriminator"),
     NTupleVariable("rawPt",  lambda x : x.pt() * x.rawFactor(), help="p_{T} before JEC"),
+    NTupleVariable("unsmearedPt",  lambda x : x.unsmearedPt if getattr(x, "unsmearedPt", None) else 0, mcOnly = True, help = "unsmeared pT when smearing is applied otherwise 0"),
     NTupleVariable("mcPt",   lambda x : x.mcJet.pt() if getattr(x,"mcJet",None) else 0., mcOnly=True, help="p_{T} of associated gen jet"),
     NTupleVariable("mcFlavour", lambda x : x.partonFlavour(), int,     mcOnly=True, help="parton flavour (physics definition, i.e. including b's from shower)"),
     NTupleVariable("partonFlavour", lambda x : x.partonFlavour(), int,     mcOnly=True, help="purely parton-based flavour"),
@@ -225,6 +228,7 @@ jetTypeExtra = NTupleObjectType("jetExtra",  baseObjectTypes = [ jetType ], vari
 metType = NTupleObjectType("met", baseObjectTypes = [ fourVectorType ], variables = [
     NTupleVariable("sumEt", lambda x : x.sumEt() ),
     NTupleVariable("rawPt",  lambda x : x.uncorPt() ),
+    NTupleVariable("unsmearedPt",  lambda x : x.unsmearedPt if getattr(x, "unsmearedPt", None) else 0, mcOnly = True, help = "unsmeared pT when smearing is applied otherwise 0"),
     NTupleVariable("rawPhi", lambda x : x.uncorPhi() ),
     NTupleVariable("rawSumEt", lambda x : x.uncorSumEt() ),
     NTupleVariable("genPt",  lambda x : x.genMET().pt() if x.genMET() else 0 , mcOnly=True ),
