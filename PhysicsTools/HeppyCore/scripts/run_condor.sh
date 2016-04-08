@@ -39,7 +39,7 @@ Error      = condor_job_\$(Process).error
 should_transfer_files   = YES 
 when_to_transfer_output = ON_EXIT
 transfer_input_files=${transfer_input_files}
-request_disk = 160000
+request_disk = 1000
 request_memory = 900
 queue 1
 EOF
