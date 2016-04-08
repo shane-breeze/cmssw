@@ -60,6 +60,7 @@ def hadd(file, odir, idirs, appx=''):
         hadd(file, odir, idirs[:len(idirs)/2], '1')
         hadd(file.replace(idirs[0], idirs[len(idirs)/2]), odir, idirs[len(idirs)/2:], '2')
         haddCmd = ['hadd']
+        haddCmd.append('-f9')
         haddCmd.append( file.replace( idirs[0], odir ).replace('.root', appx+'.root') )
         haddCmd.append( file.replace( idirs[0], odir ).replace('.root', '1.root') )
         haddCmd.append( file.replace( idirs[0], odir ).replace('.root', '2.root') )
