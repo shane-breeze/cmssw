@@ -269,7 +269,6 @@ class JetAnalyzer( Analyzer ):
             else:
                 photons = [ g for g in event.selectedPhotons ] 
 
-<<<<<<< HEAD
         self.gamma_cleanJetaAll = []
         self.gamma_noIdCleanJetsAll = []
 
