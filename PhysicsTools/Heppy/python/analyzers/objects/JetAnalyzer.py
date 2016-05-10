@@ -312,7 +312,7 @@ class JetAnalyzer( Analyzer ):
         if hasattr(self.cfg_ana,'cleanAllJets'):
             if self.cfg_ana.cleanAllJets:
                 if self.cfg_ana.alwaysCleanPhotons:
-                    self.allJetsCleaned = self.gamma_allJetsCleaned
+                    self.allJetsCleaned = self.gamma_cleanJetsAll
                 self.allJetsCleanedCentral = [ j for j in self.allJetsCleaned if abs(j.eta()) < self.cfg_ana.jetEtaCentral ]
 
         self.gamma_cleanJetsFailId = [j for j in self.gamma_cleanJetsFailIdAll if abs(j.eta()) <  self.cfg_ana.jetEtaCentral ]
@@ -386,7 +386,6 @@ class JetAnalyzer( Analyzer ):
         setattr(event,"gamma_cleanJetsAll"     +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsAll     ) 
         setattr(event,"gamma_cleanJets"        +self.cfg_ana.collectionPostFix, self.gamma_cleanJets        ) 
         setattr(event,"gamma_cleanJetsFwd"     +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsFwd     ) 
-        setattr(event,"gamma_allJetsCleaned"   +self.cfg_ana.collectionPostFix, self.gamma_allJetsCleaned ) 
         setattr(event,"gamma_cleanJetsFailIdAll"     +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsFailIdAll     ) 
         setattr(event,"gamma_cleanJetsFailId"        +self.cfg_ana.collectionPostFix, self.gamma_cleanJetsFailId        ) 
 
