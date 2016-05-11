@@ -34,7 +34,11 @@ EnergyScaleCorrection_class::EnergyScaleCorrection_class(std::string correctionF
     std::string filename = correctionFileName+"_smearings.dat";
     ReadSmearingFromFile(filename);
     if(smearings.empty()) {
+<<<<<<< HEAD
+      std::cerr << "[ERROR] scale correction map empty" << std::endl;
+=======
       std::cerr << "[ERROR] smearing correction map empty" << std::endl;
+>>>>>>> f3b0b01... EGM smearer for 81X
       exit(1);
     }
   }

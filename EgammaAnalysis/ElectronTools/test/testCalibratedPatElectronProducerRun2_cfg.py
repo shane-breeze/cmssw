@@ -20,7 +20,6 @@ process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
-
 process.MessageLogger.cerr.threshold = ''
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
@@ -109,7 +108,6 @@ if varOptions.isMC:
 else:
     process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
     
-
 process.selectedElectrons = cms.EDFilter("PATElectronSelector",
                                          src = cms.InputTag("slimmedElectrons"),
                                          cut = cms.string("pt > 8 && ((abs(eta)<1.479 && pfIsolationVariables().sumChargedHadronPt/pt < 0.1 && abs(deltaEtaSuperClusterTrackAtVtx)<0.0126 && abs(deltaPhiSuperClusterTrackAtVtx)<0.107 && hcalOverEcal<0.186 && passConversionVeto && pfIsolationVariables().sumNeutralHadronEt/pt < 0.1 && pfIsolationVariables().sumPhotonEt/pt < 0.1 && full5x5_sigmaIetaIeta<0.012) || (abs(eta)>1.479 && pfIsolationVariables().sumChargedHadronPt/pt < 0.1 && abs(deltaEtaSuperClusterTrackAtVtx)<0.0109 && abs(deltaPhiSuperClusterTrackAtVtx)<0.217 && hcalOverEcal<0.09 && passConversionVeto && pfIsolationVariables().sumNeutralHadronEt/pt < 0.1 && pfIsolationVariables().sumPhotonEt/pt < 0.1 && full5x5_sigmaIetaIeta<0.034))")
@@ -160,3 +158,4 @@ process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(outputfilename),
                                    closeFileFast = cms.untracked.bool(True)
                                    )
+
