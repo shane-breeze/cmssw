@@ -213,10 +213,8 @@ class PhotonAnalyzer( Analyzer ):
         for gamma in event.genPhotons:
             gamma.isPrompt = isPromptPhoton(gamma)
             gamma.isPromptStrict = isPromptStrictPhoton(gamma)
-            if isPromptPhoton(gamma): gamma.isPromptDirect = isDirectPhoton(gamma,partons)
-            else: gamma.isPromptDirect = False
-            if isPromptStrictPhoton(gamma): gamma.isPromptStrictDirect = isDirectPhoton(gamma,partons)
-            else: gamma.isPromptStrictDirect = False
+            gamma.isPromptDirect = isDirectPhoton(gamma,partons) and isPromptPhoton(gamma)
+            gamma.isPromptStrictDirect = isDirectPhoton(gamma,partons) and isPromptStrictPhoton(gamma)
             gamma.drMinParton = getMinDeltaR(gamma,partons)
 
     def matchPhotons(self, event):
