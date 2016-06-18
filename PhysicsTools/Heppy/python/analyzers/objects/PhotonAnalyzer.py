@@ -172,8 +172,10 @@ class PhotonAnalyzer( Analyzer ):
             return abs(particle.pdgId()) in [1,2,3,4,5,6,21] and particle.status() == 23
 
         def isPromptPhoton(photon):
-            return photon.status() == 1 and abs(photon.mother(0).pdgId()) == 22
+            return photon.status() == 1 and abs(photon.mother(0).pdgId()) <= 22 and abs(photon.mother(0).pdgId()) not in [11,13,15]
 
+        def isPromptStrictPhoton(photon):
+            return photon.status() == 1 and abs(photon.mother(0).pdgId()) == 22
 
         def isDirectPhoton(photon,partons):
             for parton in partons:
@@ -195,9 +197,13 @@ class PhotonAnalyzer( Analyzer ):
 
         partons = [ x for x in event.genParticles if isHardParton(x) ]
         promptGenPhotons = [  x for x in event.genPhotons if isPromptPhoton(x) ]
+        promptStrictGenPhotons = [  x for x in event.genPhotons if isPromptStrictPhoton(x) ]
         promptDirectGenPhotons = [ x for x in promptGenPhotons if isDirectPhoton(x,partons) ]
+        promptStrictDirectGenPhotons = [ x for x in promptStrictGenPhotons if isDirectPhoton(x,partons) ]
         event.nPromptGenPhotons = len(promptGenPhotons)
+        event.nPromptStrictGenPhotons = len(promptStrictGenPhotons)
         event.nPromptDirectGenPhotons = len(promptDirectGenPhotons)
+        event.nPromptStrictDirectGenPhotons = len(promptStrictDirectGenPhotons)
         if event.nPromptGenPhotons:
             self.counters.counter('genInfo').inc('has >=1 prompt gamma')
         if event.nPromptDirectGenPhotons:
@@ -206,7 +212,11 @@ class PhotonAnalyzer( Analyzer ):
         # Add further gen level info
         for gamma in event.genPhotons:
             gamma.isPrompt = isPromptPhoton(gamma)
-            gamma.isPromptDirect = isDirectPhoton(gamma,partons)
+            gamma.isPromptStrict = isPromptStrictPhoton(gamma)
+            if isPromptPhoton(gamma): gamma.isPromptDirect = isDirectPhoton(gamma,partons)
+            else: gamma.isPromptDirect = False
+            if isPromptStrictPhoton(gamma): gamma.isPromptStrictDirect = isDirectPhoton(gamma,partons)
+            else: gamma.isPromptStrictDirect = False
             gamma.drMinParton = getMinDeltaR(gamma,partons)
 
     def matchPhotons(self, event):

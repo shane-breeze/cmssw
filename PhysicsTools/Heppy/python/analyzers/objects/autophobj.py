@@ -181,6 +181,9 @@ photonType = NTupleObjectType("gamma", baseObjectTypes = [ particleType ], varia
     NTupleVariable("mcMatchId",  lambda x : getattr(x, 'mcMatchId', -99), int, mcOnly=True, help="Match to source from hard scatter (pdgId of heaviest particle in chain, 25 for H, 6 for t, 23/24 for W/Z), zero if non-prompt or fake"),
     NTupleVariable("mcPt",   lambda x : x.mcGamma.pt() if getattr(x,"mcGamma",None) else 0., mcOnly=True, help="p_{T} of associated gen photon"),
     NTupleVariable("isPrompt", lambda x : x.isPrompt if hasattr(x,"isPrompt") else 0, int,mcOnly=True, help="flag for prompt photons"),
+    NTupleVariable("isPromptStrict", lambda x : x.isPrompt if hasattr(x,"isPromptStrict") else 0, int,mcOnly=True, help="flag for prompt photons (strict requirement on the mother)"),
+    NTupleVariable("isPromptDirect", lambda x : x.isPrompt if hasattr(x,"isPromptDirect") else 0, int,mcOnly=True, help="flag for prompt direct photons"),
+    NTupleVariable("isPromptStrictDirect", lambda x : x.isPrompt if hasattr(x,"isPromptStrictDirect") else 0, int,mcOnly=True, help="flag for prompt direct photons (strict requirement on the mother)"),
 ])
 
 ##------------------------------------------  
