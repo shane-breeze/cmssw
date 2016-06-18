@@ -172,7 +172,8 @@ class PhotonAnalyzer( Analyzer ):
             return abs(particle.pdgId()) in [1,2,3,4,5,6,21] and particle.status() == 23
 
         def isPromptPhoton(photon):
-            return photon.status() == 1 and abs(photon.mother(0).pdgId()) <= 22 and abs(photon.mother(0).pdgId()) not in [11,13,15]
+            return photon.status() == 1 and abs(photon.mother(0).pdgId()) == 22
+
 
         def isDirectPhoton(photon,partons):
             for parton in partons:
