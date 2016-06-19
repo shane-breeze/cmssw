@@ -267,7 +267,7 @@ def batchScriptIC(jobDir):
    script = """#!/bin/bash
 ulimit -c 0
 export X509_USER_PROXY=/home/hep/$USER/myproxy
-source /vols/cms/grid/setup.sh
+source /vols/grid/cms/setup.sh
 cd {jobdir}
 cd {cmssw}/src
 eval `scramv1 ru -sh`
