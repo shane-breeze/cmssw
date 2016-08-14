@@ -33,6 +33,9 @@ mkdir lheevent; cd lheevent
 #untar the tarball directly from cvmfs
 tar -xaf ${path} 
 
+#uncomment RNG seed and rand1/rand2
+sed -i 's/#iseed/iseed/' powheg.input
+
 #generate events (call for 1 core always for now until hooks to set number of cores are implemented upstream)
 ./runcmsgrid.sh $nevt $rnum 1
 
@@ -44,4 +47,3 @@ cd $LHEWORKDIR
 rm -rf lheevent
 
 exit 0
-
