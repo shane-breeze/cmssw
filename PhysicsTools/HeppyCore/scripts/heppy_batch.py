@@ -276,7 +276,7 @@ echo 'running'
 python {cmssw}/src/PhysicsTools/HeppyCore/python/framework/looper.py pycfg.py config.pck --options=options.json
 echo
 echo 'sending the job directory back'
-mv -r Loop/* ./ && rm -r Loop
+mv Loop/* ./ && rm -r Loop
 """.format(jobdir = jobDir,cmssw = cmssw_release)
    return script
 
