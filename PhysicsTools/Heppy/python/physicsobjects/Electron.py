@@ -173,6 +173,10 @@ class Electron( Lepton ):
             'POG_SPRING15_25ns_v1_ConvVetoDxyDz_Loose'  :  WP['POG_SPRING15_25ns_v1_ConvVeto_Loose' ]+[('dxy',[0.0261, 0.1180]), ('dz',[0.410, 0.822])],
             'POG_SPRING15_25ns_v1_ConvVetoDxyDz_Medium' :  WP['POG_SPRING15_25ns_v1_ConvVeto_Medium']+[('dxy',[0.0118, 0.0739]), ('dz',[0.373, 0.602])],
             'POG_SPRING15_25ns_v1_ConvVetoDxyDz_Tight'  :  WP['POG_SPRING15_25ns_v1_ConvVeto_Tight' ]+[('dxy',[0.0111, 0.0351]), ('dz',[0.0466,0.417])],
+            'POG_SPRING16_25ns_v1_DxyDz_Veto'           :  WP['POG_SPRING16_25ns_v1_Veto'           ]+[('dxy',[0.0500, 0.1000]), ('dz',[0.10, 0.20])],
+            'POG_SPRING16_25ns_v1_DxyDz_Loose'          :  WP['POG_SPRING16_25ns_v1_Loose'          ]+[('dxy',[0.0500, 0.1000]), ('dz',[0.10, 0.20])],
+            'POG_SPRING16_25ns_v1_DxyDz_Medium'         :  WP['POG_SPRING16_25ns_v1_Medium'         ]+[('dxy',[0.0500, 0.1000]), ('dz',[0.10, 0.20])],
+            'POG_SPRING16_25ns_v1_DxyDz_Tight'          :  WP['POG_SPRING16_25ns_v1_Tight'          ]+[('dxy',[0.0500, 0.1000]), ('dz',[0.10, 0.20])],
         }
         ## ------- in Spring16, not optimised simultaneously to the rest of ID. Cuts independent on WP
         for wps in ['Veto','Loose','Medium','Tight']:
