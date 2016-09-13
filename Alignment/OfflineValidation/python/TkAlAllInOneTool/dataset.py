@@ -831,7 +831,7 @@ class Dataset:
     def createdatasetfile_hippy(self, filename, filesperjob, firstrun, lastrun):
         with open(filename, "w") as f:
             for job in self.__chunks(self.fileList(firstRun=firstrun, lastRun=lastrun, forcerunselection=True), filesperjob):
-                f.write(",".join("'{}'".format(file) for file in job))
+                f.write(",".join("'{}'".format(file) for file in job)+"\n")
 
     @staticmethod
     def getrunnumberfromfilename(filename):
@@ -870,8 +870,8 @@ class Dataset:
                      for fileInfo in self.fileInfoList(parent) ]
 
         if firstRun is not None or lastRun is not None:
-            if firstRun is None: firstRun = -5
-            if lastRun is None: lastrun = float('infinity')
+            if firstRun is None: firstRun = -1
+            if lastRun is None: lastRun = float('infinity')
             e = None
             for filename in fileList[:]:
                 try:
