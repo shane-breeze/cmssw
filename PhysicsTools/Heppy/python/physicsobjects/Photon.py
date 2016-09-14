@@ -109,6 +109,9 @@ class Photon(PhysicsObject ):
         "POG_SPRING15_50ns_Tight": {"conversionVeto": [True,True], "H/E":[0.05,0.05],"sigmaIEtaIEta":[0.0100,0.0267],
         "chaHadIso":[0.91,0.65],"neuHadIso":[[0.33,0.0044,0.5809],[0.93, 0.0040,0.9402]],"phoIso":[[0.61,0.0043],[0.54,0.0041]]},
 
+        "POG_SPRING15_50ns_Tight_noChaHadIso_noSigmaIEtaIEta": {"conversionVeto": [True,True], "H/E":[0.05,0.05],"sigmaIEtaIEta":[0.0200,0.04],
+        "chaHadIso":[10.0,10.0],"neuHadIso":[[0.33,0.0044,0.5809],[0.93, 0.0040,0.9402]],"phoIso":[[0.61,0.0043],[0.54,0.0041]]},
+
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonIdentificationRun2#SPRING15_selections_25_ns
         "POG_SPRING15_25ns_Loose": {"conversionVeto": [True,True], "H/E":[0.05,0.05],"sigmaIEtaIEta":[0.0102,0.0274],
         "chaHadIso":[3.32,1.97],"neuHadIso":[[1.92,0.014,0.000019],[11.86, 0.0139,0.000025]],"phoIso":[[0.81,0.0053],[0.83,0.0034]]},
@@ -118,6 +121,9 @@ class Photon(PhysicsObject ):
 
         "POG_SPRING15_25ns_Tight": {"conversionVeto": [True,True], "H/E":[0.05,0.05],"sigmaIEtaIEta":[0.0100,0.0268],
         "chaHadIso":[0.76,0.56],"neuHadIso":[[0.97,0.014,0.000019],[2.09, 0.0139,0.000025]],"phoIso":[[0.08,0.0053],[0.16,0.0034]]},
+
+        "POG_SPRING15_25ns_Tight_noChaHadIso_noSigmaIEtaIEta": {"conversionVeto": [True,True], "H/E":[0.05,0.05],"sigmaIEtaIEta":[0.020,0.040],
+        "chaHadIso":[10.0,10.0],"neuHadIso":[[0.97,0.014,0.000019],[2.09, 0.0139,0.000025]],"phoIso":[[0.08,0.0053],[0.16,0.0034]]},
 
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonIdentificationRun2#CSA14_selections_for_20_bx_25_sc
         "POG_CSA14_25ns_Loose": {"conversionVeto": [True,True], "H/E":[0.553,0.062],"sigmaIEtaIEta":[0.0099,0.0284],
