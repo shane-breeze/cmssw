@@ -174,6 +174,42 @@ def addRhoProducer(process):
         process.RECOoutput.outputCommands.extend(['keep *_hiFJRhoProducer_*_*'])
 
     return process
+
+# Add Centrality reconstruction in pp reco
+def customiseRecoCentrality(process):
+
+    process.load('RecoHI.HiCentralityAlgos.pACentrality_cfi')
+    process.pACentrality.producePixelTracks = cms.bool(False)
+
+    process.recoCentrality = cms.Path(process.pACentrality)
+
+    process.schedule.append(process.recoCentrality)
+
+    return process
+
+
+# Add ZDC, RPD and Centrality to AOD event content
+def storePPbAdditionalAOD(process):
+
+    process.load('Configuration.EventContent.EventContent_cff')
+
+    # extend AOD content
+    if hasattr(process,'AODoutput'):
+        process.AODoutput.outputCommands.extend(['keep *_zdcreco_*_*'])
+        process.AODoutput.outputCommands.extend(['keep ZDCDataFramesSorted_hcalDigis_*_*'])
+        process.AODoutput.outputCommands.extend(['keep ZDCDataFramesSorted_castorDigis_*_*'])
+        process.AODoutput.outputCommands.extend(['keep QIE10DataFrameHcalDataFrameContainer_hcalDigis_ZDC_*'])
+        process.AODoutput.outputCommands.extend(['keep recoCentrality*_pACentrality_*_*'])
+
+    if hasattr(process,'AODSIMoutput'):
+        process.AODSIMoutput.outputCommands.extend(['keep *_zdcreco_*_*'])
+        process.AODSIMoutput.outputCommands.extend(['keep ZDCDataFramesSorted_hcalDigis_*_*'])
+        process.AODSIMoutput.outputCommands.extend(['keep ZDCDataFramesSorted_castorDigis_*_*'])
+        process.AODSIMoutput.outputCommands.extend(['keep QIE10DataFrameHcalDataFrameContainer_hcalDigis_ZDC_*'])
+        process.AODSIMoutput.outputCommands.extend(['keep recoCentrality*_pACentrality_*_*'])
+
+    return process
+
 def customisePPrecoforPPb(process):
  
      process=addHIIsolationProducer(process)
