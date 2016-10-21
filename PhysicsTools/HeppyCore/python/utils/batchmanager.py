@@ -299,7 +299,7 @@ class BatchManager:
         onNAF =  hostName.startswith('naf')
 
         onIC = 'hep.ph.ic.ac.uk' in hostName
-        onBristol = 'bris.ac.uk' in hostName
+        onBristol = 'dice.priv' in hostName
         batchCmd = batch.split()[0]
 
         if batchCmd == 'bsub':
