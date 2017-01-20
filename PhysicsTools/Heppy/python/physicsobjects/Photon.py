@@ -124,6 +124,16 @@ class Photon(PhysicsObject ):
 
         "POG_SPRING15_25ns_Tight_noChaHadIso_noSigmaIEtaIEta": {"conversionVeto": [True,True], "H/E":[0.05,0.05],"sigmaIEtaIEta":[0.020,0.040],
         "chaHadIso":[10.0,10.0],"neuHadIso":[[0.97,0.014,0.000019],[2.09, 0.0139,0.000025]],"phoIso":[[0.08,0.0053],[0.16,0.0034]]},
+        
+        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonIdentificationRun2#Recommended_Working_points_for_2 
+        "POG_SPRING16_25ns_Loose": {"conversionVeto": [True,True], "H/E":[0.0597,0.0481],"sigmaIEtaIEta":[0.01031,0.03013],
+        "chaHadIso":[1.295,1.011],"neuHadIso":[[10.910,0.0148,0.000017],[5.931, 0.0169,0.000014]],"phoIso":[[3.630,0.0047],[6.641,0.0034]]},
+
+        "POG_SPRING16_25ns_Medium": {"conversionVeto": [True,True], "H/E":[0.0396,0.0219],"sigmaIEtaIEta":[0.01022,0.03001],
+        "chaHadIso":[0.441,0.442],"neuHadIso":[[2.725,0.0148,0.000017],[1.715, 0.0163,0.000014]],"phoIso":[[2.571,0.0047],[3.863,0.0034]]},
+
+        "POG_SPRING16_25ns_Tight": {"conversionVeto": [True,True], "H/E":[0.0269,0.0213],"sigmaIEtaIEta":[0.00994,0.03000],
+        "chaHadIso":[0.202,0.034],"neuHadIso":[[0.264,0.0148,0.000017],[0.586, 0.0163,0.000014]],"phoIso":[[2.362,0.0047],[2.617,0.0034]]},
 
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonIdentificationRun2#CSA14_selections_for_20_bx_25_sc
         "POG_CSA14_25ns_Loose": {"conversionVeto": [True,True], "H/E":[0.553,0.062],"sigmaIEtaIEta":[0.0099,0.0284],
