@@ -216,12 +216,7 @@ class Photon(PhysicsObject ):
         elif "POG_SPRING15_50ns" in name:
              if self.calScaledIsoValueExp(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):
                  passPhotonIso = False
-        elif "POG_SPRING15_25ns" in name:
-             if self.calScaledIsoValueQuadr(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):
-                 passPhotonIso = False
-             if self.calScaledIsoValueLin(*self.CutBasedIDWP(name)["phoIso"][idForBarrel]) < self.photonIso(isocorr):
-                 passPhotonIso = False
-        elif "POG_SPRING16_25ns" in name:
+        elif "POG_SPRING15_25ns" in name or "POG_SPRING16_25ns" in name:
              if self.calScaledIsoValueQuadr(*self.CutBasedIDWP(name)["neuHadIso"][idForBarrel]) < self.neutralHadronIso(isocorr):
                  passPhotonIso = False
              if self.calScaledIsoValueLin(*self.CutBasedIDWP(name)["phoIso"][idForBarrel]) < self.photonIso(isocorr):
