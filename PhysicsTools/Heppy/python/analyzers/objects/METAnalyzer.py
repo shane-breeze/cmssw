@@ -175,6 +175,28 @@ class METAnalyzer( Analyzer ):
           self.metNoPhotonNoPU.setP4(ROOT.reco.Particle.LorentzVector(px,py, 0, hypot(px,py)))
           setattr(event, "metNoPhotonNoPU"+self.cfg_ana.collectionPostFix, self.metNoPhotonNoPU)
 
+    def makeMETNoMuEle(self, event):
+        self.metNoMuEle = copy.deepcopy(self.met)
+        if self.cfg_ana.doMetNoPU: self.metNoMuEleNoPU = copy.deepcopy(self.metNoPU)
+
+        mupx, mupy = 0, 0
+        #sum muon momentum
+        for mu in event.selectedMuons:
+            mupx += mu.px()
+            mupy += mu.py()
+        elepx, elepy = 0, 0
+        #sum electron momentum
+        for ele in event.selectedElectrons:
+            elepx += ele.px()
+            elepy += ele.py()
+
+        #subtract muon+electron momentum and construct met
+        px,py = self.metNoMuEle.px()+mupx+elepx, self.metNoMuEle.py()+mupy+elepy
+        self.metNoMuEle.setP4(ROOT.reco.Particle.LorentzVector(px,py, 0, hypot(px,py)))
+        px,py = self.metNoMuEleNoPU.px()+mupx+elepx, self.metNoMuEleNoPU.py()+mupy+mupy
+        self.metNoMuEleNoPU.setP4(ROOT.reco.Particle.LorentzVector(px,py, 0, hypot(px,py)))
+        setattr(event, "metNoMuEle"+self.cfg_ana.collectionPostFix, self.metNoMuEle)
+        if self.cfg_ana.doMetNoPU: setattr(event, "metNoMuEleNoPU"+self.cfg_ana.collectionPostFix, self.metNoMuEleNoPU)
 
     def makeMETs(self, event):
         import ROOT
@@ -260,6 +282,9 @@ class METAnalyzer( Analyzer ):
 
         if self.cfg_ana.doMetNoPhoton and hasattr(event, 'selectedPhotons'):
             self.makeMETNoPhoton(event)
+
+        if self.cfg_ana.doMetNoMuEle and hasattr(event, 'selectedMuons') and hasattr(event, 'selectedElectrons'):
+            self.makeMETNoMuEle(event)
 
     def process(self, event):
         self.readCollections( event.input)
